@@ -2,6 +2,12 @@
 
 by Mannebarth Christophe
 
+## Courses based:
+
+https://openclassrooms.com/fr/courses/7150606-creez-une-application-react-complete
+
+https://openclassrooms.com/fr/courses/7150626-utilisez-le-state-manager-redux-pour-gerer-l-etat-de-vos-applications
+
 ## Frontend by Mannebarth Christophe \_10/2022
 
 ## Backend by OpenClassrooms
@@ -10,9 +16,9 @@ by Mannebarth Christophe
 
 ## Prerequisites:
 
-You will need to have Node (https://nodejs.org/en/)
+You will need to have Node https://nodejs.org/en/
 
-And Yarn: (https://yarnpkg.com/getting-started/install
+And Yarn: https://yarnpkg.com/getting-started/install
 
 ## Frontend:
 
