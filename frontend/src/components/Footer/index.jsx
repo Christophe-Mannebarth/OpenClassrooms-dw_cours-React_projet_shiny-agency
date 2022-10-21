@@ -1,12 +1,15 @@
-// IMPORT HOOK, STYLES
-/* It's importing the useTheme hook from the hooks.js file. */
-import { useTheme } from '../../utils/hooks'
-/* Importing the styled-components library. */
+/* It's importing the useDispatch and useSelector hooks from the react-redux library. */
+import { useDispatch, useSelector } from 'react-redux'
+/* It's importing the selectTheme function from the selectors.js file. */
+import { selectTheme } from '../../utils/selectors'
+/* It's importing the styled-components library. */
 import styled from 'styled-components'
 /* Importing the colors.js file from the utils/style folder. */
 import colors from '../../utils/style/colors'
 /* It's importing the EmailInput component from the EmailInput.js file. */
 import EmailInput from '../EmailInput'
+/* It's importing all the actions of the theme */
+import * as themeActions from '../../features/theme'
 
 /* Creating a styled component for the footer. */
 const FooterContainer = styled.footer`
@@ -27,16 +30,17 @@ const NightModeButton = styled.button`
 // FOOTER
 /**
  * It's a function that returns a FooterContainer component that contains a NightModeButton component
- * that has an onClick event listener that calls the toggleTheme function from the ThemeContext.
+ * that has an onClick event listener that calls the toggle action from the themeActions.
  * @returns A function that returns a component.
  */
 function Footer() {
-  const { toggleTheme, theme } = useTheme()
+  const theme = useSelector(selectTheme)
+  const dispatch = useDispatch()
 
   return (
     <FooterContainer>
       <EmailInput theme={theme} />
-      <NightModeButton onClick={() => toggleTheme()}>
+      <NightModeButton onClick={() => dispatch(themeActions.toggle())}>
         Changer de mode : {theme === 'light' ? '☀️' : '🌙'}
       </NightModeButton>
     </FooterContainer>

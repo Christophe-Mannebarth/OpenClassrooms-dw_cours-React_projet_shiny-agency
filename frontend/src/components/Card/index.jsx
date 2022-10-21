@@ -7,13 +7,10 @@ import styled from 'styled-components'
 import DefaultPicture from '../../assets/profile.png'
 /* Importing the colors.js file from the utils/style folder. */
 import colors from '../../utils/style/colors'
-/* Importing the useTheme hook from the hooks.js file. */
-import { useTheme } from '../../utils/hooks'
-/* Importing the useState hook from the react library. */
-//import { useState } from 'react'
+
 /* (CLASS COMPONENT METHOD) 
 Importing the Component class from the react library. */
-// import { Component } from 'react'
+import { Component } from 'react'
 
 /* Creating a styled component: a span called CardLabel. */
 const CardLabel = styled.span`
@@ -54,71 +51,35 @@ const CardWrapper = styled.div`
     cursor: pointer;
   }
 `
-// CARD (FUNCTION COMPONENT METHOD)
-/**
- * Takes in an object with 3 props: label, title, and picture.
- * @param {String} label    the profile job title
- * @param {String} title    the profile name
- * @param {String} picture  the profile picture
- * @returns A React component.
- */
-function Card({ label, title, picture }) {
-  // Destructuring the theme from the useTheme hook.
-  const { theme } = useTheme()
-  // A hook that is used to set the state of the component.
-  //const [isFavorite, setIsFavorite] = useState(false)
-  // A ternary operator. It is a shorthand way of writing an if/else statement.
-  //const star = isFavorite ? '⭐️' : ''
-
-  return (
-    <CardWrapper theme={theme}>
-      {/*onClick={() => setIsFavorite(!isFavorite)}>*/}
-      <CardLabel theme={theme}>{label}</CardLabel>
-      <CardImage src={picture} alt="freelance" />
-      <CardTitle theme={theme}>
-        {/*star*/} {title} {/*star*/}
-      </CardTitle>
-    </CardWrapper>
-  )
-}
 
 // CARD (CLASS COMPONENT METHOD)
-/* A class that extends the React Component class. */
-/*class Card extends Component {
+class Card extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      isFavorite: false,
-    }
-  }
-  setFavorite = () => {
-    this.setState({ isFavorite: !this.state.isFavorite })
+    this.state = {}
   }
   render() {
-    // Destructuring the props object. 
+    // Destructuring the props object.
     const { theme, picture, label, title } = this.props
-    // Destructuring the state object. 
-    const { isFavorite } = this.state
-    // A ternary operator. It is a shorthand way of writing an if/else statement.
-    const star = isFavorite ? '⭐️' : ''
 
+    // Returning the CardWrapper component with:
+    // the CardLabel, CardImage and CardTitle components inside of it.
     return (
-      <CardWrapper theme={theme} onClick={this.setFavorite}>
+      <CardWrapper theme={theme}>
         <CardLabel theme={theme}>{label}</CardLabel>
         <CardImage src={picture} alt="freelance" />
-        <CardTitle theme={theme}>
-          {star} {title} {star}
-        </CardTitle>
+        <CardTitle theme={theme}>{title}</CardTitle>
       </CardWrapper>
     )
   }
-}*/
+}
 
 /* Defining the propTypes for the Card component. */
 Card.propTypes = {
   label: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   picture: PropTypes.string.isRequired,
+  theme: PropTypes.string.isRequired,
 }
 
 /* Setting the default props for the Card component. */
@@ -126,6 +87,7 @@ Card.defaultProps = {
   label: '',
   title: '',
   picture: DefaultPicture,
+  theme: 'light',
 }
 
 // EXPORT CARD

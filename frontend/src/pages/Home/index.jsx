@@ -1,4 +1,3 @@
-// IMPORT LIBRARY, STYLES AND IMAGE
 /* Importing the styled-components library. */
 import styled from 'styled-components'
 /* Importing the colors.js file from the utils/style folder. */
@@ -7,8 +6,10 @@ import colors from '../../utils/style/colors'
 import { StyledLink } from '../../utils/style/Atoms'
 /* Importing the image from the assets folder. */
 import HomeIllustration from '../../assets/home-illustration.svg'
-/* It's importing the useTheme hook from the hooks.js file in the utils folder. */
-import { useTheme } from '../../utils/hooks'
+/* It's importing the useSelector hook from the react-redux library. */
+import { useSelector } from 'react-redux'
+/* It's importing the selectTheme function from the selectors.js file in the utils folder. */
+import { selectTheme } from '../../utils/selectors'
 
 /* It's a styled component for the HomeWrapper. */
 const HomeWrapper = styled.div`
@@ -38,6 +39,7 @@ const LeftCol = styled.div`
   }
 `
 
+/* It's a styled component for the StyledTitle. */
 const StyledTitle = styled.h2`
   padding-bottom: 30px;
   max-width: 280px;
@@ -56,8 +58,9 @@ const Illustration = styled.img`
  * @returns A React component.
  */
 function Home() {
-  /* It's destructuring the theme from the useTheme hook. */
-  const { theme } = useTheme()
+  /* It's a hook that allows you to extract data from the Redux store state,
+ using a selector function. */
+  const theme = useSelector(selectTheme)
 
   return (
     <HomeWrapper>

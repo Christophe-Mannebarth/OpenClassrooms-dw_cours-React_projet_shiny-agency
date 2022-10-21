@@ -1,10 +1,5 @@
-// IMPORT HOOKS, COMPONENTS AND STYLES
-/* Importing the useState, useEffect and useContext hooks from the react package. */
-import { useContext } from 'react'
 /* Importing the useParams hook from the react-router-dom package. */
 import { useParams } from 'react-router-dom'
-/* It's importing the useFetch hook from the hooks.js file. */
-import { useFetch, useTheme } from '../../utils/hooks'
 /* Importing the Link component from the react-router-dom package. */
 import { Link } from 'react-router-dom'
 /* Importing the Loader component from the Atoms folder. */
@@ -13,8 +8,14 @@ import { Loader } from '../../utils/style/Atoms'
 import styled from 'styled-components'
 /* Importing the colors.js file from the utils/style folder. */
 import colors from '../../utils/style/colors'
-/* It's importing the SurveyContext from the context.js file. */
-import { SurveyContext } from '../../utils/context'
+/* It's importing the useSelector and useDispatch hooks from the react-redux package. */
+import { useSelector, useDispatch } from 'react-redux'
+/* It's importing the selectTheme function from the selectors.js file. */
+import { selectTheme, selectAnswers } from '../../utils/selectors'
+/* Importing the saveAnswer function from the answers.js file. */
+import { saveAnswer } from '../../features/answers'
+/* Importing useQuery function from react-query package */
+import { useQuery } from 'react-query'
 
 /* A styled component: a div for the SurveyContainer. */
 const SurveyContainer = styled.div`
@@ -88,28 +89,41 @@ function Survey() {
   /* Adding 1 to the questionNumberInt. */
   const nextQuestionNumber = questionNumberInt + 1
 
-  /* It's destructuring the theme from the useTheme hook. */
-  const { theme } = useTheme()
+  /* It's getting the theme, answers and survey from the Redux store. */
+  const theme = useSelector(selectTheme)
+  const answers = useSelector(selectAnswers)
 
-  /* It's destructuring the saveAnswers and answers from the useContext hook. */
-  const { saveAnswers, answers } = useContext(SurveyContext)
+  // we use "dispatch" to execute a thunk
+  const dispatch = useDispatch()
+
+  const {
+    // The data returned by the server
+    // "null" if the request is not yet resolved
+    data,
+    // Boolean who indicates if the request is in progress
+    isLoading,
+    // The error returned by the server
+    // or "null" if no error
+    error,
+  } = useQuery('survey', async () => {
+    const response = await fetch('http://localhost:8000/survey')
+    const data = await response.json()
+    return data
+  })
+
+  const surveyData = data?.surveyData
+
   /**
    * - Takes an argument called "answer" and then calls another function
    * called "saveAnswers" with an object as an argument.
    * @param {Boolean} answer the answer to the question as a boolean
    */
   function saveReply(answer) {
-    saveAnswers({ [questionNumber]: answer })
+    dispatch(saveAnswer({ questionNumber, answer }))
   }
 
-  /* Destructuring the data and isLoading from the useFetch hook. */
-  const { data, isLoading, error } = useFetch(`http://localhost:8000/survey`)
-  /* Destructuring the surveyData from the data object. */
-  const surveyData = data?.surveyData
-  /* It's a condition that is checking if there is an error. 
-  If there is an error, it's returning a span with a message. */
   if (error) {
-    return <span>Oups il y a eu un problème</span>
+    return <span>Il y a un problème</span>
   }
 
   /* Returning a div with a title, a subtitle, a link to the previous question,
@@ -118,10 +132,10 @@ function Survey() {
     <SurveyContainer>
       <QuestionTitle theme={theme}>Question {questionNumber}</QuestionTitle>
       {isLoading ? (
-        <Loader />
+        <Loader data-testid="loader" />
       ) : (
-        <QuestionContent theme={theme}>
-          {surveyData[questionNumber]}
+        <QuestionContent theme={theme} data-testid="question-content">
+          {surveyData && surveyData[questionNumber]}
         </QuestionContent>
       )}
       <ReplyWrapper>

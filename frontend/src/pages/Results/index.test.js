@@ -1,4 +1,3 @@
-// IMPORT FUNCTION
 /* Importing the function `formatJobList` from the file `./` */
 import Results, { formatJobList, formatFetchParams } from './'
 /* Importing the `rest` function from the `msw` library. */

@@ -1,10 +1,11 @@
-// IMPORT FUNCTION AND HOOK
 /* Importing the createGlobalStyle function from the styled-components library. */
 import { createGlobalStyle } from 'styled-components'
-/* Importing the useTheme hook from the hooks.js file. */
-import { useTheme } from '../hooks'
+/* Importing the useSelector hook from the react-redux library. */
+import { useSelector } from 'react-redux'
+/* Importing the selectTheme selector from the selectors.js file. */
+import { selectTheme } from '../selectors'
 
-/* Creating a styled component for the global style. */
+// Creating a styled component for the global style.
 const StyledGlobalStyle = createGlobalStyle`
     * {
       font-family: 'Trebuchet MS', Helvetica, sans-serif;
@@ -24,7 +25,8 @@ const StyledGlobalStyle = createGlobalStyle`
  * @returns A styled component that is a global style.
  */
 function GlobalStyle() {
-  const { theme } = useTheme()
+  // Using the useSelector hook to get the theme from the Redux store.
+  const theme = useSelector(selectTheme)
 
   return <StyledGlobalStyle isDarkMode={theme === 'dark'} />
 }

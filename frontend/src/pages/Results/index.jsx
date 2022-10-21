@@ -1,18 +1,17 @@
-// IMPORT HOOK, CONTEXT, COMPONENT, COLORS AND HOOKS
-/* Importing the useContext hook from the react library. */
-import { useContext } from 'react'
-/* Importing the SurveyContext from the context.js file. */
-import { SurveyContext } from '../../utils/context'
 /* Importing the styled-components library. */
 import styled from 'styled-components'
 /* Importing the StyledLink and Loader components from the Atoms.js file. */
 import { StyledLink, Loader } from '../../utils/style/Atoms'
 /* Importing the colors.js file from the utils/style folder. */
 import colors from '../../utils/style/colors'
-/* Importing the useFetch and useTheme hooks from the hooks.js file. */
-import { useFetch, useTheme } from '../../utils/hooks'
 /* Importing the EmptyList component from the components folder. */
 import EmptyList from '../../components/EmptyList'
+/* Importing the useSelector ans useDispatch hooks from the react-redux library. */
+import { useSelector } from 'react-redux'
+/* Importing the selectTheme ans selectResults and selectAnswers functions from the selectors.js file. */
+import { selectAnswers, selectTheme } from '../../utils/selectors'
+/* Importing useQuery function from react-query package */
+import { useQuery } from 'react-query'
 
 /* A styled component: a div called ResultsContainer. */
 const ResultsContainer = styled.div`
@@ -96,35 +95,34 @@ export function formatJobList(title, listLength, index) {
  * @returns
  */
 function Results() {
-  /* Destructuring the theme object from the useTheme hook. */
-  const { theme } = useTheme()
-  /* Destructuring the answers object from the useContext hook. */
-  const { answers } = useContext(SurveyContext)
-  /* Taking the answers object and returning a string of query parameters. */
+  // A hook that is used to get the theme from the redux store.
+  const theme = useSelector(selectTheme)
+  // A hook that is used to get the answers from the redux store.
+  const answers = useSelector(selectAnswers)
+  // Taking the answers object and returning a string of query parameters.
   const fetchParams = formatFetchParams(answers)
 
-  /* Destructuring the data, isLoading and error objects from the useFetch hook. */
-  const { data, isLoading, error } = useFetch(
-    `http://localhost:8000/results?${fetchParams}`
+  const { error, data, isLoading } = useQuery(
+    ['results', fetchParams],
+    async () => {
+      const response = await fetch(
+        `http://localhost:8000/results?${fetchParams}`
+      )
+      const data = await response.json()
+      return data
+    }
   )
 
-  /* A conditional rendering. If there is an error, 
-  it will display the text "Il y a un problème". */
   if (error) {
     return <span>Il y a un problème</span>
   }
 
-  /* Destructuring the data object. */
   const resultsData = data?.resultsData
 
-  /* Checking if the resultsData object has a length of less than 1. 
-  If it does, it will return the EmptyList component. */
   if (resultsData?.length < 1) {
     return <EmptyList theme={theme} />
   }
 
-  /* A conditional rendering. If the data is loading, 
-  it will display the Loader component. */
   return isLoading ? (
     <LoaderWrapper>
       <Loader data-testid="loader" />
@@ -163,5 +161,6 @@ function Results() {
     </ResultsContainer>
   )
 }
+
 // EXPORT RESULTS
 export default Results

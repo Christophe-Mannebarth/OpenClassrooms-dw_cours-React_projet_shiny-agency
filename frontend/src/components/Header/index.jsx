@@ -9,8 +9,10 @@ import { StyledLink } from '../../utils/style/Atoms'
 import LightLogo from '../../assets/light-logo.png'
 /* Importing the dark-logo.png file. */
 import DarkLogo from '../../assets/dark-logo.png'
-/* Importing the useTheme hook from the hooks.js file. */
-import { useTheme } from '../../utils/hooks'
+/* Importing the useSelector hook from the react-redux package. */
+import { useSelector } from 'react-redux'
+/* Importing the selectTheme function from the selectors.js file. */
+import { selectTheme } from '../../utils/selectors'
 
 /* A styled component for the image. */
 const HomeLogo = styled.img`
@@ -37,7 +39,8 @@ const NavContainer = styled.nav`
  * @returns A React component
  */
 function Header() {
-  const { theme } = useTheme()
+  /* It's a hook that allows you to access the state of the store. */
+  const theme = useSelector(selectTheme)
 
   return (
     <NavContainer>

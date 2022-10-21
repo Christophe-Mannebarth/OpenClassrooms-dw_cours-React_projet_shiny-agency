@@ -1,6 +1,3 @@
-// IMPORT HOOKS, COMPONENTS AND STYLES
-/* Importing the useFetch and useTheme hooks from the hooks.js file. */
-import { useFetch, useTheme } from '../../utils/hooks'
 /* Importing the Loader component from the Atoms folder. */
 import { Loader } from '../../utils/style/Atoms'
 /* Importing the Card component from the components folder. */
@@ -11,6 +8,12 @@ import styled from 'styled-components'
 import colors from '../../utils/style/colors'
 /* It's importing the Link component from the react-router-dom library. */
 import { Link } from 'react-router-dom'
+/* It's importing the useSelector and useDispatch hooks from the react-redux library. */
+import { useSelector } from 'react-redux'
+/* Import selecTheme from the selectors.js file. */
+import { selectTheme } from '../../utils/selectors'
+/* Importing useQuery function from react-query package */
+import { useQuery } from 'react-query'
 
 /* It's a styled component: a div with some CSS properties. */
 const CardsContainer = styled.div`
@@ -51,25 +54,27 @@ const LoaderWrapper = styled.div`
  * @returns A React component
  */
 function Freelances() {
-  /* It's a custom hook that is getting the theme from the context. */
-  const { theme } = useTheme()
-  /* It's a  custom hook that is fetching the data from the API and setting the state. */
-  const { data, isLoading, error } = useFetch(
-    `http://localhost:8000/freelances`
-  )
+  const {
+    // The data returned by the server
+    // "null" if the request is not yet resolved
+    data,
+    // Boolean who indicates if the request is in progress
+    isLoading,
+    // The error returned by the server
+    // or "null" if no error
+    error,
+  } = useQuery('freelances', async () => {
+    const response = await fetch('http://localhost:8000/freelances')
+    const data = await response.json()
+    return data
+  })
 
-  // Here the "?" ensures that data exists.
-  // You can learn more about this notation here:
-  // https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Operators/Optional_chaining
-  const freelancersList = data?.freelancersList
+  const theme = useSelector(selectTheme)
 
-  /* It's a condition that is checking if there is an error. 
-  If there is an error, it's returning a span with a message. */
   if (error) {
-    return <span>Oups il y a eu un problème</span>
+    return <span>Il y a un problème</span>
   }
 
-  /* It's returning a div with a title, a subtitle, a loader and some cards. */
   return (
     <div>
       <PageTitle theme={theme}>Trouvez votre prestataire</PageTitle>
@@ -82,7 +87,7 @@ function Freelances() {
         </LoaderWrapper>
       ) : (
         <CardsContainer>
-          {freelancersList?.map((profile) => (
+          {data.freelancersList.map((profile) => (
             <Link key={`freelance-${profile.id}`} to={`/profile/${profile.id}`}>
               <Card
                 label={profile.job}

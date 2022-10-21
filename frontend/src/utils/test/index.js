@@ -1,32 +1,30 @@
-/* Importing the render function from the testing library. */
 import { render as rtlRender } from '@testing-library/react'
-/* Importing the ThemeProvider and SurveyProvider from the context.js file. */
-import { ThemeProvider, SurveyProvider } from '../../utils/context'
-/* A component that keeps the router's state in memory,
-and it does not interact with the browser's URL. */
 import { MemoryRouter } from 'react-router-dom'
+import themeReducer from '../../features/theme'
+import answersReducer from '../../features/answers'
+import { configureStore } from '@reduxjs/toolkit'
+import { Provider } from 'react-redux'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
-/**
- * It's a wrapper that wraps the children in a MemoryRouter,
- * a ThemeProvider,
- * and a SurveyProvider.
- * @returns The children of the component.
- */
-function Wrapper({ children }) {
-  return (
-    <MemoryRouter>
-      <ThemeProvider>
-        <SurveyProvider>{children}</SurveyProvider>
-      </ThemeProvider>
-    </MemoryRouter>
-  )
-}
+export function render(ui, options) {
+  const queryClient = new QueryClient()
 
-/**
- * It renders the component you pass to it,
- * but it wraps it in a component that provides the context you need
- * @param ui - The component to render
- */
-export function render(ui) {
+  const store = configureStore({
+    reducer: {
+      theme: themeReducer,
+      answers: answersReducer,
+    },
+  })
+
+  function Wrapper({ children }) {
+    return (
+      // We use the QueryClientProvider so that usery works in the tests!
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter {...options}>
+          <Provider store={store}>{children}</Provider>
+        </MemoryRouter>
+      </QueryClientProvider>
+    )
+  }
   rtlRender(ui, { wrapper: Wrapper })
 }
