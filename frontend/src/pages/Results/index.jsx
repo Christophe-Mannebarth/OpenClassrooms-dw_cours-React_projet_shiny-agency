@@ -12,6 +12,8 @@ import { useSelector } from 'react-redux'
 import { selectAnswers, selectTheme } from '../../utils/selectors'
 /* Importing useQuery function from react-query package */
 import { useQuery } from 'react-query'
+/* Importing axios*/
+import axios from 'axios'
 
 /* A styled component: a div called ResultsContainer. */
 const ResultsContainer = styled.div`
@@ -67,7 +69,7 @@ const LoaderWrapper = styled.div`
  * @param {Object} answers
  * @returns {String}
  */
-export function formatFetchParams(answers) {
+export function formatQueryParams(answers) {
   const answerNumbers = Object.keys(answers)
 
   return answerNumbers.reduce((previousParams, answerNumber, index) => {
@@ -100,18 +102,24 @@ function Results() {
   // A hook that is used to get the answers from the redux store.
   const answers = useSelector(selectAnswers)
   // Taking the answers object and returning a string of query parameters.
-  const fetchParams = formatFetchParams(answers)
+  const queryParams = formatQueryParams(answers)
 
-  const { error, data, isLoading } = useQuery(
-    ['results', fetchParams],
-    async () => {
-      const response = await fetch(
-        `http://localhost:8000/results?${fetchParams}`
-      )
-      const data = await response.json()
-      return data
-    }
-  )
+  const {
+    // The data returned by the server
+    // "null" if the request is not yet resolved
+    data,
+    // Boolean who indicates if the request is in progress
+    isLoading,
+    // The error returned by the server
+    // or "null" if no error
+    error,
+  } = useQuery(['results', queryParams], async () => {
+    const response = await axios.get(
+      `http://localhost:8000/results?${queryParams}`
+    )
+    const data = await response.data
+    return data
+  })
 
   if (error) {
     return <span>Il y a un problème</span>

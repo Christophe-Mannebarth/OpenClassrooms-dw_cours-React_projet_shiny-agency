@@ -10,6 +10,8 @@ import { useSelector } from 'react-redux'
 import { selectTheme } from '../../utils/selectors'
 /* Importing useQuery function from react-query package */
 import { useQuery } from 'react-query'
+/* Importing axios*/
+import axios from 'axios'
 
 // Creating a styled component: a div called ProfileWrapper.
 const ProfileWrapper = styled.div`
@@ -110,10 +112,10 @@ function Profile() {
     // we include the freelance ID in this array
     ['freelance', freelanceId],
     async () => {
-      const response = await fetch(
+      const response = await axios.get(
         `http://localhost:8000/freelance?id=${freelanceId}`
       )
-      const data = await response.json()
+      const data = await response.data
       return data
     }
   )

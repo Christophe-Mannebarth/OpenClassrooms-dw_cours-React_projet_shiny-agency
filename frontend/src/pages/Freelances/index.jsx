@@ -14,6 +14,8 @@ import { useSelector } from 'react-redux'
 import { selectTheme } from '../../utils/selectors'
 /* Importing useQuery function from react-query package */
 import { useQuery } from 'react-query'
+/* Importing axios*/
+import axios from 'axios'
 
 /* It's a styled component: a div with some CSS properties. */
 const CardsContainer = styled.div`
@@ -64,8 +66,8 @@ function Freelances() {
     // or "null" if no error
     error,
   } = useQuery('freelances', async () => {
-    const response = await fetch('http://localhost:8000/freelances')
-    const data = await response.json()
+    const response = await axios.get('http://localhost:8000/freelances')
+    const data = await response.data
     return data
   })
 

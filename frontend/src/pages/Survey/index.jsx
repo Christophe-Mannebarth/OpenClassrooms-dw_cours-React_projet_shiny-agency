@@ -16,6 +16,8 @@ import { selectTheme, selectAnswers } from '../../utils/selectors'
 import { saveAnswer } from '../../features/answers'
 /* Importing useQuery function from react-query package */
 import { useQuery } from 'react-query'
+/* Importing axios*/
+import axios from 'axios'
 
 /* A styled component: a div for the SurveyContainer. */
 const SurveyContainer = styled.div`
@@ -106,8 +108,8 @@ function Survey() {
     // or "null" if no error
     error,
   } = useQuery('survey', async () => {
-    const response = await fetch('http://localhost:8000/survey')
-    const data = await response.json()
+    const response = await axios.get('http://localhost:8000/survey')
+    const data = await response.data
     return data
   })
 

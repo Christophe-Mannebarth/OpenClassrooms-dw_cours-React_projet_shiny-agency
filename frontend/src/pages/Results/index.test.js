@@ -1,5 +1,5 @@
 /* Importing the function `formatJobList` from the file `./` */
-import Results, { formatJobList, formatFetchParams } from './'
+import Results, { formatJobList, formatQueryParams } from './'
 /* Importing the `rest` function from the `msw` library. */
 import { rest } from 'msw'
 /* Importing the `setupServer` function from the `msw/node` library. */
@@ -25,18 +25,18 @@ describe('The formatJobList function', () => {
   })
 })
 
-/* Test the formatFetchParams function */
-describe('The formatFetchParams', () => {
+/* Test the formatQueryParams function */
+describe('The formatQueryParams', () => {
   it('should use the right format for param', () => {
     const expectedState = 'a1=answer1'
-    /* Checking that the formatFetchParams function returns the expectedState. */
-    expect(formatFetchParams({ 1: 'answer1' })).toEqual(expectedState)
+    /* Checking that the formatQueryParams function returns the expectedState. */
+    expect(formatQueryParams({ 1: 'answer1' })).toEqual(expectedState)
   })
 
   it('should concatenate params with an &', () => {
     const expectedState = 'a1=answer1&a2=answer2'
-    /* Checking that the formatFetchParams function returns the expectedState. */
-    expect(formatFetchParams({ 1: 'answer1', 2: 'answer2' })).toEqual(
+    /* Checking that the formatQueryParams function returns the expectedState. */
+    expect(formatQueryParams({ 1: 'answer1', 2: 'answer2' })).toEqual(
       expectedState
     )
   })
